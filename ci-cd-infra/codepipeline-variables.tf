@@ -9,3 +9,21 @@ variable "codepipeline_name" {
   type        = string
   default     = "ci-cd-infra-pipeline"
 }
+
+variable "codepipeline_role_arn" {
+  description = "IAM Role codepipeline ARN"
+  type        = string
+  default     = "arn:aws:iam::533267065014:role/codepipeline-role"
+}
+
+variable "repository_id" {
+  description = "The github repository to get the code"
+  type        = string
+  default     = "ManuelCoral1998/simetrik-tech-test"
+}
+
+variable "repository_branch_name" {
+  description = "The branch to get the code"
+  type        = string
+  default     = "master"
+}

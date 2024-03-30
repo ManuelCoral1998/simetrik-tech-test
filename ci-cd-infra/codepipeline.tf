@@ -5,7 +5,7 @@ data "aws_codestarconnections_connection" "github_connection" {
 
 resource "aws_codepipeline" "codepipeline" {
   name     = var.codepipeline_name
-  role_arn = "arn:aws:iam::533267065014:role/codepipeline-role"
+  role_arn = var.codepipeline_role_arn
 
   artifact_store {
     type     = "S3"
@@ -23,9 +23,9 @@ resource "aws_codepipeline" "codepipeline" {
       output_artifacts = ["infra_code"]
       configuration = {
         ConnectionArn        = data.aws_codestarconnections_connection.github_connection.arn
-        BranchName           = "master"
+        BranchName           = var.repository_branch_name
         OutputArtifactFormat = "CODE_ZIP"
-        FullRepositoryId     = "ManuelCoral1998/simetrik-tech-test"
+        FullRepositoryId     = var.repository_id
       }
     }
   }
