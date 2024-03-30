@@ -1,0 +1,99 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: grpc
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: grpc
+  name: front
+  labels:
+    app: front
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: front
+  template:
+    metadata:
+      labels:
+          app: front
+    spec:
+      containers:
+      - name: front
+        image: manuel11coral23/front-grpc:latest
+        env:
+          - name: RECOMMENDATIONS_HOST
+            value: recommendations
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: grpc
+  name: recommendations
+  labels:
+    app: recommendations
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: recommendations
+  template:
+    metadata:
+      labels:
+        app: recommendations
+    spec:
+      containers:
+      - name: recommendations
+        image: manuel11coral23/back-grpc:latest
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: grpc
+  name: recommendations
+spec:
+  selector:
+    app: recommendations
+  ports:
+    - protocol: TCP
+      port: 50051
+      targetPort: 50051
+  type: NodePort
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: grpc
+  name: front
+spec:
+  type: NodePort
+  selector:
+    app: front
+  ports:
+    - protocol: TCP
+      port: 5000
+      targetPort: 5000
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  namespace: grpc
+  name: ingress-front
+  annotations:
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+spec:
+  ingressClassName: alb
+  rules:
+    - http:
+        paths:
+        - path: /
+          pathType: Prefix
+          backend:
+            service:
+              name: front
+              port:
+                number: 5000

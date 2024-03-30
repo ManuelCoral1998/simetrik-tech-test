@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+enum MovieCategory {
+    MYSTERY = 0;
+    SCIENCE_FICTION = 1;
+    SELF_HELP = 2;
+}
+
+message MovieRecommendationRequest {
+    int32 user_id = 1;
+    MovieCategory category = 2;
+    int32 max_results = 3;
+}
+
+message MovieRecommendation {
+    int32 id = 1;
+    string title = 2;
+}
+
+message MovieRecommendationResponse {
+    repeated MovieRecommendation recommendations = 1;
+}
+
+service Recommendations {
+    rpc Recommend (MovieRecommendationRequest) returns (MovieRecommendationResponse);
+}

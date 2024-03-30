@@ -1,0 +1,5 @@
+flask ~= 1.1
+Jinja2 ~= 2.11
+grpcio == 1.59.3 
+grpcio-tools == 1.59.3
+markupsafe == 2.0.1
